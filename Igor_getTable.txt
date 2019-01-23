@@ -1,0 +1,41 @@
+#pragma rtGlobals=1
+Function Load_PM(path,filename)
+	String path, filename
+	String fullpath, load
+	fullpath=path+filename
+	load="LoadPM/A=1/J=$stimString"+"\""+fullpath+"\""
+	Execute load
+End
+
+Function creatTable()
+	Variable sweeps_num,i,group,num=1
+	string Name,cmd,name1,null
+	Edit as num2str(num)
+	sweeps_num=CountObjects("root:",1)
+	for (i=0;i<=sweeps_num;i+=1)
+		Name=GetIndexedObjName("root:",1,i)
+		group=DemoSplitString(Name)
+			if (group==num)
+				name1="'"+Name+"'"
+				cmd="AppendToTable"+name1
+				Execute cmd
+			else
+				Edit as num2str(group)
+				name1="'"+Name+"'"
+				cmd="AppendToTable"+name1
+				Execute cmd
+				num=group
+			endif
+	endfor
+End
+
+Function DemoSplitString(subject)
+	String subject
+	String regExp="([[:alpha:]]+)_([[:digit:]]+)_([[:digit:]]+)_([[:digit:]]+)_([[:digit:]]+)_([[:alpha:]]+)-([[:digit:]]+)"
+	String n1,n2,n3,n4,n5,n6,n7
+	subject="\""+subject+"\""
+	SplitString /E=(regExp) subject,n1,n2,n3,n4,n5,n6,n7
+	
+	return str2num(n3)
+End
+	
